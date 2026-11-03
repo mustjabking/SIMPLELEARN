@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MONEY • Devil Developers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05060b;
+    --stroke:rgba(255,255,255,.10);
+    --txt:#eef1ff;
+    --muted:#8b93b0;
+    --a1:#7c5cff;
+    --a2:#00e5ff;
+    --a3:#ff2d75;
+    --good:#00ffa3;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+
+  body{
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    background:var(--bg);
+    color:var(--txt);
+    min-height:100dvh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:26px 16px;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  /* ---------- Animated Background ---------- */
+  .orb{
+    position:fixed;
+    border-radius:50%;
+    filter:blur(90px);
+    opacity:.45;
+    pointer-events:none;
+    z-index:0;
+    animation:float 14s ease-in-out infinite;
+  }
+  .orb.o1{width:420px;height:420px;background:var(--a1);top:-140px;left:-120px}
+  .orb.o2{width:380px;height:380px;background:var(--a2);bottom:-150px;right:-110px;animation-delay:-5s}
+  .orb.o3{width:300px;height:300px;background:var(--a3);top:45%;left:60%;animation-delay:-9s;opacity:.28}
+  @keyframes float{
+    0%,100%{transform:translate(0,0) scale(1)}
+    50%{transform:translate(30px,-40px) scale(1.15)}
+  }
+  .grid-bg{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+    background-size:56px 56px;
+    mask-image:radial-gradient(circle at 50% 40%, #000 0%, transparent 72%);
+    -webkit-mask-image:radial-gradient(circle at 50% 40%, #000 0%, transparent 72%);
+  }
+
+  /* ---------- Wrapper ---------- */
+  .wrap{position:relative;z-index:2;width:100%;max-width:460px}
+
+  /* ---------- Card ---------- */
+  .card{
+    position:relative;
+    background:linear-gradient(160deg, rgba(255,255,255,.075), rgba(255,255,255,.02));
+    border:1px solid var(--stroke);
+    border-radius:30px;
+    padding:34px 26px 28px;
+    backdrop-filter:blur(26px) saturate(160%);
+    -webkit-backdrop-filter:blur(26px) saturate(160%);
+    box-shadow:
+      0 30px 80px -20px rgba(0,0,0,.85),
+      0 0 0 1px rgba(255,255,255,.03) inset,
+      0 1px 0 rgba(255,255,255,.12) inset;
+    overflow:hidden;
+    animation:cardIn .8s cubic-bezier(.2,.8,.25,1) both;
+  }
+  @keyframes cardIn{
+    from{opacity:0;transform:translateY(28px) scale(.96)}
+    to{opacity:1;transform:none}
+  }
+  .card::before{
+    content:"";
+    position:absolute;top:0;left:-40%;
+    width:180%;height:1.5px;
+    background:linear-gradient(90deg,transparent,var(--a2),var(--a1),var(--a3),transparent);
+    animation:shimmer 4.5s linear infinite;
+  }
+  @keyframes shimmer{to{transform:translateX(60%)}}
+
+  /* ---------- Header ---------- */
+  .title{
+    font-size:44px;
+    font-weight:900;
+    letter-spacing:-2px;
+    line-height:1;
+    text-align:center;
+    background:linear-gradient(100deg,#fff 5%, var(--a2) 40%, var(--a1) 65%, var(--a3) 95%);
+    background-size:220% auto;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    animation:flow 6s linear infinite;
+    filter:drop-shadow(0 0 26px rgba(124,92,255,.45));
+  }
+  @keyframes flow{to{background-position:220% center}}
+
+  .sub{
+    text-align:center;
+    color:var(--muted);
+    font-size:12.5px;
+    letter-spacing:3.2px;
+    text-transform:uppercase;
+    margin-top:9px;
+    font-weight:600;
+  }
+
+  .creator{
+    display:block;
+    width:fit-content;
+    margin:16px auto 0;
+    font-size:9.5px;
+    font-weight:800;
+    letter-spacing:2.2px;
+    text-transform:uppercase;
+    padding:7px 14px;
+    border-radius:100px;
+    color:#ffd9e5;
+    background:linear-gradient(90deg, rgba(255,45,117,.18), rgba(124,92,255,.18));
+    border:1px solid rgba(255,45,117,.35);
+    box-shadow:0 0 22px rgba(255,45,117,.20);
+  }
+
+  /* ---------- Progress dots ---------- */
+  .dots{display:flex;gap:8px;justify-content:center;margin:24px 0 22px}
+  .dot{
+    height:4px;width:26px;border-radius:99px;
+    background:rgba(255,255,255,.12);
+    transition:.45s cubic-bezier(.2,.8,.25,1);
+  }
+  .dot.on{
+    background:linear-gradient(90deg,var(--a2),var(--a1));
+    box-shadow:0 0 14px rgba(0,229,255,.6);
+    width:40px;
+  }
+
+  /* ---------- Steps ---------- */
+  .step{display:none}
+  .step.active{display:block;animation:fade .5s cubic-bezier(.2,.8,.25,1) both}
+  @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  /* ---------- Form ---------- */
+  .field{margin-bottom:16px}
+  .field label{
+    display:block;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1.6px;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+  .input-box{position:relative}
+  .input-box input{
+    width:100%;
+    padding:15px 16px 15px 46px;
+    font-size:15px;
+    font-weight:600;
+    font-family:inherit;
+    color:var(--txt);
+    background:rgba(255,255,255,.045);
+    border:1px solid var(--stroke);
+    border-radius:15px;
+    outline:none;
+    transition:.28s;
+  }
+  .input-box input::placeholder{color:#5b6280;font-weight:500}
+  .input-box input:focus{
+    background:rgba(255,255,255,.075);
+    border-color:rgba(0,229,255,.55);
+    box-shadow:0 0 0 4px rgba(0,229,255,.10), 0 0 24px rgba(0,229,255,.18);
+  }
+  .input-box .ic{
+    position:absolute;left:15px;top:50%;transform:translateY(-50%);
+    font-size:16px;opacity:.75;pointer-events:none;
+  }
+
+  .btn{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:15px;
+    font-family:inherit;
+    font-size:14.5px;
+    font-weight:800;
+    letter-spacing:1.4px;
+    text-transform:uppercase;
+    cursor:pointer;
+    color:#05060b;
+    background:linear-gradient(120deg,var(--a2),var(--a1) 55%,var(--a3));
+    background-size:200% auto;
+    transition:.3s;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 12px 34px -10px rgba(124,92,255,.85);
+  }
+  .btn:hover{background-position:right center;transform:translateY(-2px);box-shadow:0 18px 44px -12px rgba(0,229,255,.85)}
+  .btn:active{transform:translateY(0) scale(.985)}
+  .btn::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.55),transparent 70%);
+    transform:translateX(-120%);
+  }
+  .btn:hover::after{animation:shine .85s ease}
+  @keyframes shine{to{transform:translateX(120%)}}
+
+  .btn.ghost{
+    background:rgba(255,255,255,.05);
+    color:var(--txt);
+    border:1px solid var(--stroke);
+    box-shadow:none;
+    margin-top:12px;
+  }
+  .btn.ghost:hover{background:rgba(255,255,255,.1);box-shadow:none;transform:translateY(-2px)}
+
+  .err{
+    display:none;
+    margin-top:8px;
+    font-size:12px;
+    font-weight:600;
+    color:#ff6b8b;
+  }
+  .err.show{display:block;animation:shake .35s}
+  @keyframes shake{
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-6px)}
+    75%{transform:translateX(6px)}
+  }
+
+  /* ---------- Step 2 : Image ---------- */
+  .img-frame{
+    position:relative;
+    border-radius:20px;
+    overflow:hidden;
+    border:1px solid var(--stroke);
+    background:linear-gradient(135deg,rgba(124,92,255,.25),rgba(0,229,255,.18));
+    box-shadow:0 22px 50px -18px rgba(0,0,0,.9);
+    min-height:170px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .img-frame img{
+    width:100%;height:auto;display:block;
+    transition:transform .6s cubic-bezier(.2,.8,.25,1);
+  }
+  .img-frame:hover img{transform:scale(1.035)}
+  .img-frame::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,transparent 55%,rgba(5,6,11,.55));
+    pointer-events:none;
+  }
+
+  .note{
+    display:flex;align-items:center;gap:10px;
+    margin:18px 0 6px;
+    padding:13px 15px;
+    border-radius:14px;
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:.7px;
+    color:#ffe6a8;
+    background:rgba(255,190,60,.09);
+    border:1px solid rgba(255,190,60,.28);
+  }
+  .note .pulse{
+    width:9px;height:9px;border-radius:50%;background:#ffbe3c;flex:none;
+    box-shadow:0 0 0 0 rgba(255,190,60,.7);
+    animation:pulse 1.6s infinite;
+  }
+  @keyframes pulse{
+    70%{box-shadow:0 0 0 12px rgba(255,190,60,0)}
+    100%{box-shadow:0 0 0 0 rgba(255,190,60,0)}
+  }
+
+  /* ---------- Step 3 : E-ID ---------- */
+  .ok-icon{
+    width:74px;height:74px;margin:0 auto 16px;
+    border-radius:50%;
+    display:grid;place-items:center;
+    font-size:34px;
+    background:radial-gradient(circle at 30% 25%,rgba(0,255,163,.35),rgba(0,255,163,.06));
+    border:1px solid rgba(0,255,163,.45);
+    box-shadow:0 0 44px rgba(0,255,163,.35);
+    animation:pop .6s cubic-bezier(.2,1.4,.4,1) both;
+  }
+  @keyframes pop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+
+  .ok-title{
+    text-align:center;font-size:17px;font-weight:800;letter-spacing:.4px;
+  }
+  .ok-sub{text-align:center;font-size:12px;color:var(--muted);margin-top:5px;letter-spacing:.5px}
+
+  .id-label{
+    margin:22px 0 9px;
+    font-size:10px;font-weight:800;letter-spacing:3px;text-transform:uppercase;
+    color:var(--a2);
+    display:flex;align-items:center;gap:8px;
+  }
+  .id-label::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(0,229,255,.5),transparent)}
+
+  .id-box{
+    position:relative;
+    padding:20px 18px;
+    border-radius:18px;
+    background:linear-gradient(160deg,rgba(0,0,0,.6),rgba(124,92,255,.10));
+    border:1px solid rgba(0,229,255,.30);
+    box-shadow:0 0 34px -6px rgba(0,229,255,.35), inset 0 1px 0 rgba(255,255,255,.07);
+    overflow:hidden;
+  }
+  .id-box::before{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(115deg,transparent 40%,rgba(0,229,255,.14),transparent 60%);
+    transform:translateX(-100%);
+    animation:sweep 3.2s ease-in-out infinite;
+  }
+  @keyframes sweep{60%,100%{transform:translateX(100%)}}
+
+  #eid{
+    font-family:'JetBrains Mono',monospace;
+    font-size:17px;
+    font-weight:700;
+    line-height:1.65;
+    letter-spacing:1.2px;
+    word-break:break-all;
+    background:linear-gradient(90deg,#fff,var(--a2),var(--a1));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 16px rgba(0,229,255,.45));
+    position:relative;z-index:1;
+    min-height:28px;
+  }
+
+  .row{display:flex;gap:10px;margin-top:14px}
+  .row .btn{margin-top:0}
+
+  /* ---------- Footer ---------- */
+  .foot{
+    text-align:center;
+    margin-top:22px;
+    font-size:10px;
+    letter-spacing:2.4px;
+    text-transform:uppercase;
+    color:#4d5470;
+    font-weight:700;
+  }
+  .foot b{
+    background:linear-gradient(90deg,var(--a3),var(--a1));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+
+  @media(max-width:420px){
+    .card{padding:28px 20px 24px;border-radius:26px}
+    .title{font-size:38px}
+    #eid{font-size:15px}
+  }
+</style>
+</head>
+<body>
+
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+<div class="orb o3"></div>
+<div class="grid-bg"></div>
+
+<div class="wrap">
+  <div class="card">
+
+    <!-- HEADER -->
+    <h1 class="title">MONEY</h1>
+    <p class="sub">Secure E-ID Portal</p>
+    <span class="creator">Created by Devil Developers</span>
+
+    <!-- PROGRESS -->
+    <div class="dots">
+      <div class="dot on" id="d1"></div>
+      <div class="dot" id="d2"></div>
+      <div class="dot" id="d3"></div>
+    </div>
+
+    <!-- ================= STEP 1 ================= -->
+    <section class="step active" id="step1">
+      <div class="field">
+        <label>Your Name</label>
+        <div class="input-box">
+          <span class="ic">👤</span>
+          <input id="nameInput" type="text" placeholder="Enter your full name" autocomplete="name" />
+        </div>
+        <div class="err" id="nameErr">Please enter a valid name (letters only)</div>
+      </div>
+
+      <div class="field">
+        <label>WhatsApp Number</label>
+        <div class="input-box">
+          <span class="ic">📱</span>
+          <input id="numInput" type="tel" inputmode="numeric" placeholder="e.g. 923001234567" autocomplete="tel" />
+        </div>
+        <div class="err" id="numErr">Enter a valid number (8–15 digits)</div>
+      </div>
+
+      <button class="btn" id="nextBtn">Continue →</button>
+    </section>
+
+    <!-- ================= STEP 2 ================= -->
+    <section class="step" id="step2">
+      <div class="img-frame">
+        <img id="payImg"
+             src="https://nexura-m.github.io/SIMPLILEARN/qr.png"
+             alt="Transaction" />
+      </div>
+
+      <div class="note">
+        <span class="pulse"></span>
+        After transaction, press COMPLETE
+      </div>
+
+      <button class="btn" id="completeBtn" style="margin-top:14px">Complete ✓</button>
+      <button class="btn ghost" id="backBtn1">← Back</button>
+    </section>
+
+    <!-- ================= STEP 3 ================= -->
+    <section class="step" id="step3">
+      <div class="ok-icon">✓</div>
+      <div class="ok-title">Transaction Completed</div>
+      <div class="ok-sub">Your secure E-ID has been generated</div>
+
+      <div class="id-label">Your E-ID</div>
+      <div class="id-box">
+        <div id="eid">—</div>
+      </div>
+
+      <div class="row">
+        <button class="btn" id="copyBtn">Copy ID</button>
+      </div>
+      <button class="btn ghost" id="restartBtn">↻ New Entry</button>
+    </section>
+
+  </div>
+
+  <div class="foot">Powered by <b>Devil Developers</b></div>
+</div>
+
+<script>
+/* ============================================================
+   MONEY — E-ID Generator
+   ============================================================ */
+
+const $ = s => document.querySelector(s);
+
+/* ---------- Encoding maps ---------- */
+const NUM_MAP = {
+  '1':'!', '2':'@', '3':'#', '4':'$', '5':'%',
+  '6':'^', '7':'&', '8':'*', '9':'(', '0':')'
+};
+
+/* A=1 ... Z=26, SPACE=0  →  "A BC" = 1,0,2,3 */
+function encodeName(name){
+  const out = [];
+  for (const ch of name.toUpperCase()){
+    if (ch === ' ') out.push('0');
+    else if (ch >= 'A' && ch <= 'Z') out.push(String(ch.charCodeAt(0) - 64));
+  }
+  return out.join(',');
+}
+
+/* 1=! 2=@ 3=# 4=$ 5=% 6=^ 7=& 8=* 9=( 0=) */
+function encodeNumber(num){
+  return [...num].map(d => NUM_MAP[d] || '').join('');
+}
+
+/* ---------- State ---------- */
+let STATE = { name:'', number:'', eid:'' };
+
+/* ---------- Step navigation ---------- */
+function goStep(n){
+  document.querySelectorAll('.step').forEach((el,i)=>{
+    el.classList.toggle('active', i === n-1);
+  });
+  ['d1','d2','d3'].forEach((id,i)=>{
+    document.getElementById(id).classList.toggle('on', i === n-1);
+  });
+}
+
+/* ---------- Validation ---------- */
+function showErr(el, on){
+  el.classList.toggle('show', on);
+}
+
+/* ---------- Step 1 → Step 2 ---------- */
+$('#nextBtn').addEventListener('click', () => {
+  const nameEl = $('#nameInput');
+  const numEl  = $('#numInput');
+
+  const name = nameEl.value.trim().replace(/\s+/g,' ');
+  const num  = numEl.value.replace(/\D/g,'');
+
+  const nameOk = name.length >= 2 && /^[A-Za-z ]+$/.test(name);
+  const numOk  = num.length >= 8 && num.length <= 15;
+
+  showErr($('#nameErr'), !nameOk);
+  showErr($('#numErr'), !numOk);
+
+  if (!nameOk || !numOk) return;
+
+  STATE.name   = name;
+  STATE.number = num;
+
+  goStep(2);
+});
+
+/* ---------- Step 2 → Step 3 (COMPLETE) ---------- */
+$('#completeBtn').addEventListener('click', () => {
+  const nameCode = encodeName(STATE.name);
+  const numCode  = encodeNumber(STATE.number);
+
+  STATE.eid = nameCode + '-' + numCode;
+
+  goStep(3);
+  typeReveal($('#eid'), STATE.eid, 900);
+});
+
+/* ---------- Back / Restart ---------- */
+$('#backBtn1').addEventListener('click', () => goStep(1));
+
+$('#restartBtn').addEventListener('click', () => {
+  $('#nameInput').value = '';
+  $('#numInput').value  = '';
+  $('#eid').textContent = '—';
+  STATE = { name:'', number:'', eid:'' };
+  showErr($('#nameErr'), false);
+  showErr($('#numErr'), false);
+  goStep(1);
+});
+
+/* ---------- Copy ---------- */
+$('#copyBtn').addEventListener('click', async (e) => {
+  const btn = e.currentTarget;
+  const original = btn.textContent;
+  try{
+    await navigator.clipboard.writeText(STATE.eid);
+  }catch(err){
+    const t = document.createElement('textarea');
+    t.value = STATE.eid;
+    document.body.appendChild(t);
+    t.select();
+    document.execCommand('copy');
+    t.remove();
+  }
+  btn.textContent = 'Copied ✓';
+  setTimeout(()=> btn.textContent = original, 1600);
+});
+
+/* ---------- Scramble reveal animation ---------- */
+function typeReveal(el, text, duration){
+  const junk = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-';
+  const start = performance.now();
+
+  function frame(now){
+    const p = Math.min(1, (now - start) / duration);
+    const shown = Math.floor(p * text.length);
+
+    let tail = '';
+    if (p < 1){
+      const len = Math.min(6, text.length - shown);
+      for (let i = 0; i < len; i++){
+        tail += junk[Math.floor(Math.random() * junk.length)];
+      }
+    }
+
+    el.textContent = text.slice(0, shown) + tail;
+
+    if (p < 1) requestAnimationFrame(frame);
+    else el.textContent = text;
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ---------- Image fallback ---------- */
+$('#payImg').addEventListener('error', (e) => {
+  e.target.style.display = 'none';
+  e.target.parentElement.innerHTML =
+    '<div style="padding:44px 20px;text-align:center;color:#8b93b0;font-size:13px;font-weight:600;letter-spacing:1px">QR / PAYMENT IMAGE</div>';
+});
+
+/* ---------- Enter key support ---------- */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter'){
+    if ($('#step1').classList.contains('active')) $('#nextBtn').click();
+    else if ($('#step2').classList.contains('active')) $('#completeBtn').click();
+  }
+});
+</script>
+</body>
+</html>
