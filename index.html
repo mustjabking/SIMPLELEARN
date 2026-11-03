@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SIMPLELEARN — by Devil Developers</title>
+<link rel="icon" type="image/png" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4rV2QL0PdHVm8PZAQbPKvure_YQSl_Et2oKeJMK8U5g&s=10">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f8fc;
+  --surface:#ffffff;
+  --ink:#0b0d17;
+  --ink-2:#1c2033;
+  --muted:#697089;
+  --line:#e7e9f2;
+  --line-2:#dfe2ee;
+  --brand:#5b4bff;
+  --brand-2:#8b6bff;
+  --cyan:#00b8ff;
+  --pink:#ff4d9d;
+  --ok:#0eab7a;
+  --gold:#ffb020;
+  --shadow-lg:0 40px 90px -45px rgba(20,24,70,.35);
+  --shadow-md:0 24px 60px -34px rgba(20,24,70,.28);
+  --shadow-sm:0 8px 24px -12px rgba(20,24,70,.18);
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  -webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;
+}
+button,input,a{font-family:inherit}
+a{color:inherit;text-decoration:none}
+img{max-width:100%}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* -------- background -------- */
+.bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.bg::before{content:'';position:absolute;width:900px;height:900px;border-radius:50%;
+  background:radial-gradient(circle,rgba(123,97,255,.18),transparent 62%);top:-380px;left:-260px;filter:blur(24px)}
+.bg::after{content:'';position:absolute;width:780px;height:780px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,184,255,.16),transparent 62%);bottom:-380px;right:-220px;filter:blur(24px)}
+.bg .orb{position:absolute;width:640px;height:640px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,77,157,.10),transparent 65%);top:42%;left:56%}
+.bg .grid{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(11,13,23,.028) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(11,13,23,.028) 1px,transparent 1px);
+  background-size:64px 64px;
+  -webkit-mask-image:radial-gradient(ellipse at 50% 0%,#000 20%,transparent 72%);
+  mask-image:radial-gradient(ellipse at 50% 0%,#000 20%,transparent 72%)}
+
+/* -------- topbar -------- */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.78);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid rgba(231,233,242,.9)}
+.topbar-in{max-width:1240px;margin:auto;padding:12px 24px;display:flex;align-items:center;
+  justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,#f0f1ff,#e6f7ff);
+  display:grid;place-items:center;border:1px solid var(--line);overflow:hidden;
+  box-shadow:var(--shadow-sm);flex:0 0 auto;position:relative}
+.logo img{width:32px;height:32px;object-fit:contain}
+.logo .fb{font-weight:800;color:var(--brand);font-size:22px;display:none}
+.brand b{display:block;font-size:15.5px;letter-spacing:2px;font-weight:800;line-height:1.1}
+.brand small{display:block;font-size:9px;letter-spacing:1.7px;color:var(--muted);
+  font-weight:800;text-transform:uppercase;margin-top:2px}
+.nav{display:flex;align-items:center;gap:6px}
+.nav a{padding:9px 14px;border-radius:11px;font-size:12.5px;font-weight:700;
+  color:var(--ink-2);transition:.18s}
+.nav a:hover{background:#f1f2fa;color:var(--brand)}
+.nav-cta{margin-left:8px;display:flex;gap:8px}
+
+/* -------- buttons -------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 20px;border-radius:14px;border:1px solid transparent;font-size:13.5px;
+  font-weight:800;letter-spacing:.2px;transition:transform .2s,box-shadow .2s,background .2s;
+  line-height:1;white-space:nowrap;cursor:pointer;text-decoration:none}
+.btn-primary{background:linear-gradient(135deg,#5b4bff,#8b6bff 48%,#00b8ff);color:#fff;
+  box-shadow:0 14px 32px -12px rgba(91,75,255,.65)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 20px 42px -14px rgba(91,75,255,.75)}
+.btn-ghost{background:#fff;border-color:var(--line);color:var(--ink);box-shadow:var(--shadow-sm)}
+.btn-ghost:hover{background:#f8f9fe;transform:translateY(-2px)}
+.btn-soft{background:#f1f2fa;color:var(--ink);border-color:transparent}
+.btn-soft:hover{background:#e8eaf7}
+.btn-dark{background:#0b0d17;color:#fff;border-color:#0b0d17}
+.btn-dark:hover{background:#1c2033;transform:translateY(-2px)}
+.btn-sm{padding:9px 14px;font-size:11.5px;border-radius:11px}
+.btn-lg{padding:16px 26px;font-size:14.5px;border-radius:16px}
+.btn-block{width:100%;justify-content:center}
+.btn svg{width:15px;height:15px}
+
+/* -------- layout -------- */
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+section{padding:64px 0}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:10.5px;letter-spacing:2.4px;
+  font-weight:800;color:var(--brand);text-transform:uppercase}
+.spark{width:7px;height:7px;border-radius:50%;background:var(--brand);
+  box-shadow:0 0 0 4px rgba(91,75,255,.15)}
+.grad{background:linear-gradient(120deg,#5b4bff,#00b8ff 55%,#ff4d9d);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.mut{color:var(--muted)}
+h1,h2,h3{letter-spacing:-.9px}
+
+/* -------- hero -------- */
+.hero{padding-top:52px;padding-bottom:40px}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(40px,6vw,68px);line-height:1.02;letter-spacing:-2.4px;
+  font-weight:800;margin:18px 0 20px}
+.hero h1 span.grad{display:inline-block}
+.hero-sub{max-width:520px;font-size:15px;line-height:1.7;color:var(--muted);margin-bottom:28px}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.hero-badges{display:flex;gap:8px;flex-wrap:wrap}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;
+  background:#fff;border:1px solid var(--line);font-size:10.5px;font-weight:800;
+  color:var(--ink-2);box-shadow:var(--shadow-sm)}
+.hero-badge svg{width:13px;height:13px;color:var(--brand)}
+
+/* hero visual */
+.hero-visual{position:relative;height:480px}
+.hero-card{position:absolute;background:#fff;border:1px solid var(--line);border-radius:24px;
+  box-shadow:var(--shadow-lg);padding:20px;overflow:hidden}
+.hero-card.c1{top:0;right:0;width:290px;height:200px;
+  background:radial-gradient(400px 200px at 100% 0%,rgba(123,97,255,.28),transparent 65%),#fff}
+.hero-card.c2{top:130px;left:0;width:260px;height:170px;
+  background:radial-gradient(360px 200px at 0% 100%,rgba(0,184,255,.24),transparent 65%),#fff}
+.hero-card.c3{bottom:0;right:20px;width:290px;height:190px;
+  background:radial-gradient(400px 200px at 100% 100%,rgba(255,77,157,.2),transparent 65%),#fff}
+.hero-card .tag{font-size:9px;letter-spacing:2px;font-weight:800;color:var(--muted);text-transform:uppercase}
+.hero-card b{display:block;font-size:19px;letter-spacing:-.6px;margin:8px 0 4px}
+.hero-card small{font-size:11px;color:var(--muted);font-weight:600;line-height:1.55}
+.hero-card .ic{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;
+  font-size:22px;margin-bottom:12px}
+.hero-card .ic.v{background:rgba(91,75,255,.12);border:1px solid rgba(91,75,255,.22)}
+.hero-card .ic.b{background:rgba(0,184,255,.12);border:1px solid rgba(0,184,255,.22)}
+.hero-card .ic.p{background:rgba(255,77,157,.12);border:1px solid rgba(255,77,157,.22)}
+.hero-card .chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px}
+.hero-card .chips span{font-size:8.5px;font-weight:800;letter-spacing:.8px;
+  padding:4px 8px;border-radius:6px;background:#f1f2fa;color:var(--muted)}
+
+/* -------- how it works -------- */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.step{position:relative;background:#fff;border:1px solid var(--line);border-radius:24px;
+  padding:28px 24px;box-shadow:var(--shadow-sm);transition:.25s;overflow:hidden}
+.step:hover{transform:translateY(-4px);box-shadow:var(--shadow-md)}
+.step-num{position:absolute;top:20px;right:20px;font-size:52px;font-weight:800;
+  color:rgba(11,13,23,.045);letter-spacing:-3px;line-height:1;font-family:'JetBrains Mono',monospace}
+.step-ic{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;
+  font-size:24px;margin-bottom:16px;position:relative;z-index:1}
+.step:nth-child(1) .step-ic{background:linear-gradient(135deg,#f1efff,#e6e2ff);
+  border:1px solid #d9d3ff}
+.step:nth-child(2) .step-ic{background:linear-gradient(135deg,#e6f9ff,#d6f2ff);
+  border:1px solid #bce8ff}
+.step:nth-child(3) .step-ic{background:linear-gradient(135deg,#fff0f7,#ffe3ef);
+  border:1px solid #ffd0e3}
+.step h3{font-size:17px;letter-spacing:-.4px;margin-bottom:7px;position:relative;z-index:1}
+.step p{font-size:12.5px;line-height:1.65;color:var(--muted);position:relative;z-index:1;margin-bottom:14px}
+.step a{font-size:11px;font-weight:800;color:var(--brand);letter-spacing:.5px;
+  display:inline-flex;align-items:center;gap:5px;position:relative;z-index:1}
+.step a:hover{text-decoration:underline}
+
+/* -------- section heads -------- */
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;
+  margin-bottom:28px;flex-wrap:wrap}
+.section-head h2{font-size:clamp(28px,3.4vw,42px);line-height:1.06;letter-spacing:-1.4px;
+  margin-top:10px;font-weight:800}
+.section-head p{font-size:13.5px;color:var(--muted);line-height:1.65;max-width:440px;margin-top:8px}
+
+/* -------- courses -------- */
+.courses{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.course{--c:#5b4bff;--c-soft:rgba(91,75,255,.1);--c-line:rgba(91,75,255,.22);
+  position:relative;background:#fff;border:1px solid var(--line);border-radius:26px;padding:22px;
+  display:flex;flex-direction:column;min-height:250px;overflow:hidden;
+  transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s,border-color .28s}
+.course::before{content:'';position:absolute;width:240px;height:240px;border-radius:50%;
+  background:radial-gradient(circle,var(--c),transparent 65%);opacity:.07;top:-110px;right:-90px;
+  transition:opacity .3s;pointer-events:none}
+.course:hover{transform:translateY(-6px);box-shadow:0 34px 70px -38px rgba(20,24,70,.4);
+  border-color:var(--c-line)}
+.course:hover::before{opacity:.16}
+.course-main{display:flex;flex-direction:column;height:100%;position:relative;z-index:1}
+.course-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.course-icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:25px;
+  background:var(--c-soft);border:1px solid var(--c-line);flex:0 0 auto}
+.course-tag{font-size:8.5px;letter-spacing:1.5px;font-weight:800;color:var(--muted);
+  text-transform:uppercase;text-align:right;padding-top:4px}
+.course h3{font-size:19px;letter-spacing:-.5px;line-height:1.2;margin-bottom:7px}
+.course p{font-size:12px;line-height:1.6;color:var(--muted);min-height:38px}
+.stars{display:flex;align-items:center;gap:6px;margin-top:12px;font-size:15px;color:var(--gold);
+  letter-spacing:2px}
+.stars span{font-size:9.5px;letter-spacing:1px;color:var(--muted);font-weight:800}
+.course-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-top:auto;padding-top:18px}
+.course-state{font-size:9.5px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
+.course-arrow{width:34px;height:34px;border-radius:50%;background:#f3f4fb;display:grid;place-items:center;
+  font-size:15px;transition:.22s;flex:0 0 auto}
+.course:hover .course-arrow{background:var(--c);color:#fff;transform:rotate(-45deg)}
+.course.featured{grid-column:span 2;flex-direction:row;align-items:center;gap:20px;min-height:260px;
+  background:
+    radial-gradient(720px 320px at 100% 0%,rgba(123,97,255,.38),transparent 62%),
+    radial-gradient(520px 320px at 0% 100%,rgba(0,184,255,.22),transparent 62%),
+    #0b0d17;
+  border-color:#1e2235;color:#fff}
+.course.featured::before{display:none}
+.course.featured:hover{box-shadow:0 42px 90px -46px rgba(91,75,255,.75);border-color:#3a3f66}
+.course.featured .course-icon{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18)}
+.course.featured h3{font-size:clamp(22px,2.3vw,27px);color:#fff;letter-spacing:-.8px}
+.course.featured p{color:#aeb3cf;font-size:12.5px;min-height:auto}
+.course.featured .course-tag{color:#b7a8ff}
+.course.featured .course-state{color:#c7c9e0}
+.course.featured .course-arrow{background:rgba(255,255,255,.1);color:#fff}
+.course.featured:hover .course-arrow{background:var(--c);transform:rotate(-45deg)}
+.feat-visual{position:relative;width:190px;height:190px;flex:0 0 auto;display:grid;place-items:center}
+.feat-visual > span{font-size:64px;position:relative;z-index:2;filter:drop-shadow(0 20px 30px rgba(0,0,0,.4))}
+.feat-visual small{position:absolute;bottom:2px;font-size:8px;letter-spacing:2px;font-weight:800;
+  color:#c7c9e0;z-index:2}
+.feat-ring{position:absolute;inset:6px;border-radius:50%;border:1px solid rgba(255,255,255,.14)}
+.feat-ring.r2{inset:28px;border-color:rgba(255,255,255,.1)}
+.feat-ring::before{content:'';position:absolute;width:8px;height:8px;border-radius:50%;
+  background:var(--cyan);top:14px;left:22px;box-shadow:0 0 16px var(--cyan)}
+.feat-ring.r2::before{background:var(--pink);top:auto;bottom:10px;left:auto;right:18px;
+  box-shadow:0 0 16px var(--pink)}
+
+/* -------- products / ecosystem -------- */
+.eco{padding-top:24px;padding-bottom:80px}
+.eco-wrap{position:relative;background:#0b0d17;border-radius:36px;padding:56px 48px;
+  overflow:hidden;color:#fff;box-shadow:0 60px 120px -50px rgba(20,24,70,.55)}
+.eco-wrap::before{content:'';position:absolute;width:820px;height:820px;border-radius:50%;
+  background:radial-gradient(circle,rgba(123,97,255,.42),transparent 62%);
+  top:-380px;left:-240px;filter:blur(20px)}
+.eco-wrap::after{content:'';position:absolute;width:720px;height:720px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,184,255,.32),transparent 62%);
+  bottom:-380px;right:-220px;filter:blur(20px)}
+.eco-grid-bg{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:52px 52px;
+  -webkit-mask-image:radial-gradient(ellipse at center,#000 20%,transparent 76%);
+  mask-image:radial-gradient(ellipse at center,#000 20%,transparent 76%)}
+.eco-head{position:relative;z-index:1;text-align:center;margin-bottom:38px}
+.eco-head .eyebrow{color:#b7a8ff}
+.eco-head .spark{background:#b7a8ff;box-shadow:0 0 0 4px rgba(183,168,255,.18)}
+.eco-head h2{font-size:clamp(30px,4vw,48px);line-height:1.06;letter-spacing:-1.6px;
+  margin:14px 0 12px;font-weight:800;color:#fff}
+.eco-head p{font-size:13.5px;line-height:1.7;color:#aab0d0;max-width:540px;margin:0 auto}
+.eco-cards{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.eco-card{position:relative;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:22px;padding:24px 20px;backdrop-filter:blur(12px);
+  transition:.3s cubic-bezier(.2,.8,.2,1);overflow:hidden;text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;min-height:190px}
+.eco-card::before{content:'';position:absolute;inset:0;border-radius:22px;
+  background:radial-gradient(300px 200px at 50% -20%,var(--ec,#7c5cff),transparent 70%);
+  opacity:.18;transition:.3s;pointer-events:none}
+.eco-card:hover{transform:translateY(-6px);border-color:var(--ec,#7c5cff);
+  box-shadow:0 24px 60px -20px var(--ec,#7c5cff)}
+.eco-card:hover::before{opacity:.4}
+.eco-ic{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;
+  background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);
+  margin-bottom:16px;font-size:24px;position:relative;z-index:1;flex:0 0 auto}
+.eco-ic svg{width:26px;height:26px;color:#fff}
+.eco-card h3{font-size:15.5px;letter-spacing:-.3px;font-weight:800;color:#fff;
+  position:relative;z-index:1;margin-bottom:5px}
+.eco-card small{font-size:9.5px;letter-spacing:1.4px;font-weight:800;color:#8b93b8;
+  text-transform:uppercase;position:relative;z-index:1;display:block;margin-bottom:12px}
+.eco-card p{font-size:11.5px;line-height:1.55;color:#aab0d0;position:relative;z-index:1;
+  margin-bottom:14px;flex:1}
+.eco-url{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:800;
+  color:#b7a8ff;letter-spacing:.5px;position:relative;z-index:1;
+  font-family:'JetBrains Mono',monospace;word-break:break-all}
+.eco-url svg{width:11px;height:11px;flex:0 0 auto}
+.eco-foot{position:relative;z-index:1;text-align:center;margin-top:36px;
+  padding-top:24px;border-top:1px solid rgba(255,255,255,.08);
+  font-size:10.5px;letter-spacing:1.6px;color:#8b93b8;font-weight:800}
+
+/* -------- CTA banner -------- */
+.cta-banner{position:relative;overflow:hidden;border-radius:32px;
+  background:linear-gradient(120deg,#f1efff,#e6f9ff 55%,#fff0f7);
+  border:1px solid var(--line);padding:52px 44px;box-shadow:var(--shadow-md)}
+.cta-banner::before{content:'';position:absolute;width:520px;height:520px;border-radius:50%;
+  background:radial-gradient(circle,rgba(123,97,255,.2),transparent 62%);
+  top:-200px;right:-140px;filter:blur(20px)}
+.cta-banner::after{content:'';position:absolute;width:420px;height:420px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,184,255,.18),transparent 62%);
+  bottom:-200px;left:-120px;filter:blur(20px)}
+.cta-inner{position:relative;z-index:1;display:grid;grid-template-columns:1.4fr .9fr;
+  gap:32px;align-items:center}
+.cta-inner h2{font-size:clamp(28px,3.6vw,44px);line-height:1.08;letter-spacing:-1.6px;
+  margin:12px 0 12px;font-weight:800}
+.cta-inner p{font-size:13.5px;line-height:1.7;color:var(--muted);max-width:460px}
+.cta-actions{display:flex;flex-direction:column;gap:10px;align-items:stretch}
+.cta-price{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px;
+  box-shadow:var(--shadow-sm);text-align:center}
+.cta-price .ptag{font-size:9.5px;letter-spacing:2px;font-weight:800;color:var(--muted);
+  text-transform:uppercase;margin-bottom:4px}
+.cta-price .num{font-size:46px;font-weight:800;letter-spacing:-2.4px;line-height:1;
+  margin:4px 0 2px}
+.cta-price .num small{font-size:16px;font-weight:700;color:var(--muted);
+  letter-spacing:.5px;vertical-align:top;margin-right:2px}
+.cta-price .sub{font-size:10.5px;color:var(--muted);font-weight:700;margin-bottom:14px}
+
+/* -------- footer -------- */
+.foot{background:#0b0d17;color:#c6c9dd;padding:56px 0 32px;margin-top:80px;position:relative;overflow:hidden}
+.foot::before{content:'';position:absolute;width:640px;height:640px;border-radius:50%;
+  background:radial-gradient(circle,rgba(123,97,255,.22),transparent 62%);
+  top:-320px;right:-220px;filter:blur(20px)}
+.foot-inner{max-width:1240px;margin:auto;padding:0 24px;position:relative;z-index:1}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:32px;margin-bottom:36px}
+.foot-brand{max-width:320px}
+.foot-brand .brand b{color:#fff}
+.foot-brand .brand small{color:#8b93b8}
+.foot-brand p{font-size:12px;line-height:1.7;color:#8b93b8;margin-top:16px}
+.foot-col h4{font-size:10.5px;letter-spacing:2px;font-weight:800;color:#fff;
+  text-transform:uppercase;margin-bottom:14px}
+.foot-col a{display:block;font-size:12px;color:#aab0d0;padding:5px 0;
+  transition:.18s;font-weight:600}
+.foot-col a:hover{color:#fff;transform:translateX(3px)}
+.foot-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:22px;
+  display:flex;justify-content:space-between;align-items:center;gap:14px;
+  font-size:11px;color:#8b93b8;flex-wrap:wrap}
+.foot-bottom b{color:#b7a8ff}
+.foot-badges{display:flex;gap:8px;flex-wrap:wrap}
+.foot-badge{padding:6px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);font-size:9px;letter-spacing:1.5px;font-weight:800;
+  color:#c6c9dd}
+
+/* -------- responsive -------- */
+@media(max-width:1100px){
+  .eco-cards{grid-template-columns:repeat(2,1fr)}
+  .foot-grid{grid-template-columns:1.4fr 1fr 1fr}
+}
+@media(max-width:960px){
+  .nav{display:none}
+  .hero-grid{grid-template-columns:1fr;gap:40px}
+  .hero-visual{height:auto;position:relative}
+  .hero-card{position:relative;width:100%!important;height:auto!important;
+    top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;
+    margin-bottom:12px}
+  .courses{grid-template-columns:repeat(2,1fr)}
+  .course.featured{grid-column:span 2;flex-direction:column;align-items:flex-start}
+  .feat-visual{display:none}
+  .steps{grid-template-columns:1fr}
+  .cta-inner{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  section{padding:44px 0}
+  .wrap{padding:0 16px}
+  .topbar-in{padding:10px 16px}
+  .nav-cta .btn span{display:none}
+  .courses{grid-template-columns:1fr}
+  .course.featured{grid-column:span 1}
+  .eco-cards{grid-template-columns:1fr}
+  .eco-wrap{padding:36px 22px}
+  .cta-banner{padding:32px 22px}
+  .foot-grid{grid-template-columns:1fr}
+  .hero h1{font-size:clamp(34px,9vw,48px);letter-spacing:-1.6px}
+  .foot-bottom{flex-direction:column;align-items:flex-start;text-align:left}
+}
+</style>
+</head>
+<body>
+
+<div class="bg">
+  <div class="grid"></div>
+  <div class="orb"></div>
+</div>
+
+<!-- ============ TOPBAR ============ -->
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="#top">
+      <span class="logo">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4rV2QL0PdHVm8PZAQbPKvure_YQSl_Et2oKeJMK8U5g&s=10"
+          alt="SIMPLELEARN" referrerpolicy="no-referrer"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <span class="fb">S</span>
+      </span>
+      <span>
+        <b>SIMPLELEARN</b>
+        <small>by Devil Developers</small>
+      </span>
+    </a>
+    <nav class="nav">
+      <a href="COURSE.html">Courses</a>
+      <a href="#how">How it works</a>
+      <a href="#ecosystem">Ecosystem</a>
+      <a href="https://nexura-m.github.io/SIMPLILEARN/" target="_blank" rel="noopener">Portal</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="https://nexura-m.github.io/SIMPLILEARN/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span>Verify ID</span>
+      </a>
+       <a class="btn btn-ghost btn-sm" href="COURSE.html" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span>COURSES</span>
+      </a>
+      <a class="btn btn-primary btn-sm" href="MONEY.html">
+        Buy ID · ₹2000
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow"><span class="spark"></span> POWERED BY DEVIL DEVELOPERS</div>
+          <h1>Learn. Build.<br><span class="grad">Get Certified.</span></h1>
+          <p class="hero-sub">
+            India's friendliest learning platform. Buy a verified ID, unlock one complete course,
+            and earn a modern <b>SIMPLELEARN certificate</b> — backed by real progress tracking.
+          </p>
+          <div class="hero-cta">
+            <a class="btn btn-primary btn-lg" href="MONEY.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/></svg>
+              Buy Verified ID — ₹2000
+            </a>
+             <a class="btn btn-primary btn-lg" href="COURSE.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/></svg>
+              LEARN COURSE
+            </a>
+            <a class="btn btn-ghost btn-lg" href="https://nexura-m.github.io/SIMPLILEARN/" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              Verify Your ID
+            </a>
+          </div>
+          <div class="hero-badges">
+            <span class="hero-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg> 100% Verified</span>
+            <span class="hero-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Lifetime Access</span>
+            <span class="hero-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6z"/></svg> 9 Courses</span>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-card c1">
+            <div class="ic v">🎓</div>
+            <div class="tag">VERIFIED CERTIFICATE</div>
+            <b>SIMPLELEARN Certified</b>
+            <small>Modern certificate with your verified ID, issued on 100% completion.</small>
+          </div>
+          <div class="hero-card c2">
+            <div class="ic b">🔐</div>
+            <div class="tag">VERIFIED ID</div>
+            <b>1 ID · 1 Course</b>
+            <small>Each verified ID permanently unlocks one complete course.</small>
+            <div class="chips"><span>VERIFIED</span><span>PERMANENT</span></div>
+          </div>
+          <div class="hero-card c3">
+            <div class="ic p">⚡</div>
+            <div class="tag">INSTANT ACCESS</div>
+            <b>Buy · Verify · Learn</b>
+            <small>Get started in under 5 minutes — no passwords, no friction.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow"><span class="spark"></span> SIMPLE PROCESS</div>
+          <h2>Three steps to get certified.</h2>
+          <p>Everything you need to go from purchase to verified certificate — clearly laid out.</p>
+        </div>
+      </div>
+      <div class="steps">
+        <article class="step">
+          <div class="step-num">01</div>
+          <div class="step-ic">💳</div>
+          <h3>Buy Your Verified ID</h3>
+          <p>Pay ₹2000 and receive your personal learner ID from the SIMPLELEARN registry.</p>
+          <a href="MONEY.html">Go to checkout →</a>
+        </article>
+        <article class="step">
+          <div class="step-num">02</div>
+          <div class="step-ic">✅</div>
+          <h3>Verify on the Portal</h3>
+          <p>Submit your ID on the portal. Once verified, you get instant access to the course dashboard.</p>
+          <a href="https://nexura-m.github.io/SIMPLILEARN/" target="_blank" rel="noopener">Open portal →</a>
+        </article>
+        <article class="step">
+          <div class="step-num">03</div>
+          <div class="step-ic">🎓</div>
+          <h3>Learn &amp; Get Certified</h3>
+          <p>Unlock one course, complete every lesson, and download your verified certificate.</p>
+          <a href="COURSE.html">Browse courses →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COURSES ============ -->
+  <section id="courses">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow"><span class="spark"></span> CURRICULUM</div>
+          <h2>Pick the course you want to unlock.</h2>
+          <p>Your verified ID unlocks exactly one full course — permanently. Choose wisely.</p>
+        </div>
+        <a class="btn btn-ghost" href="MONEY.html">Get Verified ID →</a>
+        <a class="btn btn-ghost" href="COURSE.html">LEARN COURSE →</a>
+
+      </div>
+
+      <div class="courses">
+        <!-- Featured -->
+        <article class="course featured" style="--c:#7c5cff">
+          <div class="course-main">
+            <div class="course-top">
+              <span class="course-icon">🤖</span>
+              <span class="course-tag">FEATURED · 5★</span>
+            </div>
+            <h3>AI Development Without Coding</h3>
+            <p>Build and launch AI-powered products without writing a single line of code.</p>
+            <div class="stars">★★★★★ <span>5.0 · Beginner friendly</span></div>
+            <div class="course-foot">
+              <span class="course-state">Unlock with verified ID</span>
+              <span class="course-arrow">→</span>
+            </div>
+          </div>
+          <div class="feat-visual">
+            <div class="feat-ring"></div>
+            <div class="feat-ring r2"></div>
+            <span>🤖</span>
+            <small>1 LESSON · BY M</small>
+          </div>
+        </article>
+
+        <!-- Python -->
+        <article class="course" style="--c:#3776ab;--c-soft:rgba(55,118,171,.1);--c-line:rgba(55,118,171,.22)">
+          <div class="course-main">
+            <div class="course-top">
+              <span class="course-icon">🐍</span>
+              <span class="course-tag">PYTHON</span>
+            </div>
+            <h3>Python</h3>
+            <p>From variables to functions — the complete Python foundation in Hindi.</p>
+            <div class="course-foot">
+              <span class="course-state">Unlock with verified ID</span>
+              <span class="course-arrow">→</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Web -->
+        <article class="course" style="--c:#e44d26;--c-soft:rgba(228,77,38,.1);--c-line:rgba(228,77,38,.22)">
+          <div class="course-main">
+            <div class="course-top">
+              <span class="course-icon">🌐</span>
+              <span class="course-tag">HTML · CSS · JS</span>
+            </div>
+            <h3>Web Development</h3>
+            <p>HTML, CSS and JavaScript combined into one complete web development course.</p>
+            <div class="course-foot">
+              <span class="course-state">Unlock with verified ID</span>
+              <span class="course-arrow">→</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- AI -->
+        <article class="course" style="--c:#00b8ff;--c-soft:rgba(0,184,255,.1);--c-line:rgba(0,184,255,.22)">
+          <div class="course-main">
+            <div class="course-top">
+              <span class="course-icon">🧠</span>
+              <span class="course-tag">AI &amp; DEEP LEARNING</span>
+            </div>
+            <h3>AI Development</h3>
+            <p>Learn AI and deep learning from scratch with hands-on concepts.</p>
+            <div class="course-foot">
+              <span class="course-state">Unlock with verified ID</span>
+              <span class="course-arrow">→</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Git -->
+        <article class="course" style="--c:#f05033;--c-soft:rgba(240,80,51,.1);--c-line:rgba(240,80,51,.22)">
+          <div class="course-main">
+            <div class="course-top">
+              <span class="course-icon">🔧</span>
+              <span class="course-tag">VERSION CONTROL</span>
+            </div>
+            <h3>Git &amp; GitHub</h3>
+            <p>Master version control, branching, pull requests and collaboration.</p>
+            <div class="course-foot">
+              <span class="course-state">Unlock with verified ID</span>
+              <span class="course-arrow">→</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Prompt -->
+        <article class="course" style="--c:#ff4d9d;--c-soft:rgba(255,77,157,.1);--c-line:rgba(255,77,157,.22)">
+          <div class="course-main">
+            <div class="course-top">
+              <span class="course-icon">✨</span>
+              <span class="course-tag">PROMPT ENGINEERING</span>
+            </div>
+            <h3>Prompt Engineering</h3>
+            <p>Go from beginner to pro at designing prompts that get results.</p>
+            <div class="course-foot">
+              <span class="course-state">Unlock with verified ID</span>
+              <span class="course-arrow">→</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Android -->
+        <article class="course" style="--c:#3ddc84;--c-soft:rgba(61,220,132,.12);--c-line:rgba(61,220,132,.25)">
+          <div class="course-main">
+            <div class="course-top">
+              <span class="course-icon">📱</span>
+              <span class="course-tag">ANDROID</span>
+            </div>
+            <h3>Android App Development</h3>
+            <p>Build real Android apps with a practical, project-based approach.</p>
+            <div class="course-foot">
+              <span class="course-state">Unlock with verified ID</span>
+              <span class="course-arrow">→</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Game -->
+        <article class="course" style="--c:#ff7a00;--c-soft:rgba(255,122,0,.1);--c-line:rgba(255,122,0,.22)">
+          <div class="course-main">
+            <div class="course-top">
+              <span class="course-icon">🎮</span>
+              <span class="course-tag">UNITY · GAME DEV</span>
+            </div>
+            <h3>Game Development</h3>
+            <p>Create games in Unity with a complete Hindi/Urdu game development course.</p>
+            <div class="course-foot">
+              <span class="course-state">Unlock with verified ID</span>
+              <span class="course-arrow">→</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- C# -->
+        <article class="course" style="--c:#9b4f96;--c-soft:rgba(155,79,150,.1);--c-line:rgba(155,79,150,.22)">
+          <div class="course-main">
+            <div class="course-top">
+              <span class="course-icon">🎯</span>
+              <span class="course-tag">C# · .NET</span>
+            </div>
+            <h3>C#</h3>
+            <p>Learn C# programming from the ground up with clear Hindi tutorials.</p>
+            <div class="course-foot">
+              <span class="course-state">Unlock with verified ID</span>
+              <span class="course-arrow">→</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA BANNER ============ -->
+  <section>
+    <div class="wrap">
+      <div class="cta-banner">
+        <div class="cta-inner">
+          <div>
+            <div class="eyebrow"><span class="spark"></span> READY WHEN YOU ARE</div>
+            <h2>Get your verified ID and unlock a full course today.</h2>
+            <p>
+              One ₹2000 payment gives you a unique verified ID, permanent access to one complete course,
+              and a shareable SIMPLELEARN certificate on completion.
+            </p>
+          </div>
+          <div class="cta-actions">
+            <div class="cta-price">
+              <div class="ptag">VERIFIED ID</div>
+              <div class="num"><small>₹</small>2000</div>
+              <div class="sub">One-time · Lifetime access</div>
+              <a class="btn btn-primary btn-block" href="MONEY.html">
+                Buy Now
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+            </div>
+            <a class="btn btn-ghost btn-block" href="https://nexura-m.github.io/SIMPLILEARN/" target="_blank" rel="noopener">
+              Already have an ID? Verify →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="foot-inner">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand">
+          <span class="logo">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4rV2QL0PdHVm8PZAQbPKvure_YQSl_Et2oKeJMK8U5g&s=10"
+              alt="SIMPLELEARN" referrerpolicy="no-referrer"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <span class="fb">S</span>
+          </span>
+          <span>
+            <b>SIMPLELEARN</b>
+            <small>by Devil Developers</small>
+          </span>
+        </div>
+        <p>
+          A verified-ID learning portal by Devil Developers. Buy your ID, unlock a course,
+          complete every lesson, and earn a certified SIMPLELEARN credential.
+        </p>
+      </div>
+      <div class="foot-col">
+        <h4>Learn</h4>
+        <a href="COURSE.html">All courses</a>
+        <a href="#how">How it works</a>
+        <a href="https://nexura-m.github.io/SIMPLILEARN/" target="_blank" rel="noopener">Learner portal</a>
+        <a href="MONEY.html">Buy verified ID</a>
+      </div>
+    
+      <div class="foot-col">
+        <h4>Company</h4>
+        <a href="#top">Home</a>
+        <a href="#ecosystem">Powered by</a>
+        <a href="MONEY.html">Checkout</a>
+        <a href="COURSE.html">Checkout</a>
+        <a href="https://nexura-m.github.io/SIMPLILEARN/" target="_blank" rel="noopener">Verify ID</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> SIMPLELEARN · Created by <b>Devil Developers</b></span>
+      
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+/* smooth internal anchors */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if (id.length < 2) return;
+    const t = document.querySelector(id);
+    if (t){
+      e.preventDefault();
+      t.scrollIntoView({ behavior:'smooth', block:'start' });
+    }
+  });
+});
+/* tiny reveal-on-scroll */
+const revealEls = document.querySelectorAll('.course, .step, .eco-card, .hero-card, .cta-banner');
+if ('IntersectionObserver' in window){
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting){
+        en.target.style.transition = 'opacity .6s ease, transform .6s ease';
+        en.target.style.opacity = '1';
+        en.target.style.transform = 'translateY(0)';
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold:0.12 });
+  revealEls.forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(14px)';
+    io.observe(el);
+  });
+}
+</script>
+</body>
+</html>
