@@ -754,8 +754,39 @@ h1,h2,h3{letter-spacing:-.9px}
   </div>
 </footer>
 
- <!-- Yeh placeholder GitHub Actions replace kar dega -->
-    <!-- INJECT_SCRIPT_HERE -->
-  
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+/* smooth internal anchors */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if (id.length < 2) return;
+    const t = document.querySelector(id);
+    if (t){
+      e.preventDefault();
+      t.scrollIntoView({ behavior:'smooth', block:'start' });
+    }
+  });
+});
+/* tiny reveal-on-scroll */
+const revealEls = document.querySelectorAll('.course, .step, .eco-card, .hero-card, .cta-banner');
+if ('IntersectionObserver' in window){
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting){
+        en.target.style.transition = 'opacity .6s ease, transform .6s ease';
+        en.target.style.opacity = '1';
+        en.target.style.transform = 'translateY(0)';
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold:0.12 });
+  revealEls.forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(14px)';
+    io.observe(el);
+  });
+}
+</script>
 </body>
 </html>
